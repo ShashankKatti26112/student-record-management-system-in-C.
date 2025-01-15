@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <graphics.h>
+
+// Structure to store student details
+struct Student {
+    int id;
+    char name[50];
+    float marks;
+};
+
+// Function to add a student record
+void add_student_record(struct Student students[], int *count) {
+    printf("Enter student ID: ");
+    scanf("%d", &students[*count].id);
+
+    printf("Enter student Name: ");
+    scanf(" %49[^\n]", students[*count].name);
+
+    printf("Enter student Marks: ");
+    scanf("%f", &students[*count].marks);
+
+    (*count)++;
+    printf("Student record added successfully.\n");
+}
+
+// Function to delete a student record
+void delete_student_record(struct Student students[], int *count) {
+    int id, i, found = 0;
+    printf("Enter student ID to delete: ");
+    scanf("%d", &id);
+
+    for (i = 0; i < *count; i++) {
+        if (students[i].id == id) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found) {
+        for (; i < *count - 1; i++) {
+            students[i] = students[i + 1];
+        }
+        (*count)--;
+        printf("Student record deleted successfully.\n");
+    } else {
+        printf("Student ID not found.\n");
+    }
+}
+
+// Function to display all student records
+void display_students_record(struct Student students[], int count) {
+    int i, y = 50;
+    settextstyle(DEFAULT_FONT, HORIZ_DIR, 2);
+
+    if (count == 0) {
+        outtextxy(100, y, "No records available.");
+        return;
+    }
+
+    outtextxy(50, y, "ID\tName\t\tMarks");
+    y += 30;
+    for (i = 0; i < count; i++) {
+        char buffer[100];
+        sprintf(buffer, "%d\t%s\t\t%.2f", students[i].id, students[i].name, students[i].marks);
+        outtextxy(50, y, buffer);
+        y += 30;
+    }
+}
+
+// Function to display menu and options
+void display_menu() {
+    settextstyle(DEFAULT_FONT, HORIZ_DIR, 3);
+    outtextxy(100, 50, "1. Add student record");
+    outtextxy(100, 100, "2. Delete student record");
+    outtextxy(100, 150, "3. Display student records");
+    outtextxy(100, 200, "4. Exit");
+}
+
+// Main function
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
+
+    struct Student students[100];
+    int count = 0, choice;
+
+    while (1) {
+        cleardevice();
+        display_menu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        cleardevice();
+        switch (choice) {
+            case 1:
+                add_student_record(students, &count);
+                break;
+            case 2:
+                delete_student_record(students, &count);
+                break;
+            case 3:
+                display_students_record(students, count);
+                break;
+            case 4:
+                closegraph();
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}

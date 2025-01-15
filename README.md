@@ -1,0 +1,1 @@
+# student-record-management-system-in-C.
